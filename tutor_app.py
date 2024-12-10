@@ -48,7 +48,7 @@ if st.button("Get Answer"):
         with st.spinner("Processing your query..."):
             try:
                 # Call OpenAI API
-                response = openai.ChatCompletion.create(
+                response = openai.chat.completions.create(
                     model="gpt-4",
                     messages=[
                         {"role": "system", "content": system_prompt()},
