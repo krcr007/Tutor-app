@@ -47,8 +47,8 @@ if st.button("Get Answer"):
     elif query.strip():
         with st.spinner("Processing your query..."):
             try:
-                # Call OpenAI API
-                response = openai.chat.completions.create(
+                # Call OpenAI API with streaming enabled
+                response_stream = openai.chat.completions.create(
                     model="gpt-4",
                     messages=[
                         {"role": "system", "content": system_prompt()},
@@ -57,10 +57,17 @@ if st.button("Get Answer"):
                     stream=True
                 )
 
-                # Extract and display the response
-                response_content = response['choices'][0]['message']['content']
-                st.success("Here's your answer:")
-                st.write(response_content)
+                # Display the streaming response in real-time
+                response_placeholder = st.empty()
+                final_response = ""
+                for chunk in response_stream:
+                    if "choices" in chunk and chunk["choices"]:
+                        delta = chunk["choices"][0]["delta"]
+                        if "content" in delta:
+                            final_response += delta["content"]
+                            response_placeholder.write(final_response)
+
+                st.success("Response completed!")
             except Exception as e:
                 st.error(f"An error occurred: {e}")
     else:
