@@ -54,6 +54,8 @@ if st.button("Get Answer"):
                         {"role": "system", "content": system_prompt()},
                         {"role": "user", "content": user_prompt(query)},
                     ],
+                    stream=True,
+                    
                 )
 
                 # Extract and display the response
